@@ -4,7 +4,38 @@
 
 Fon arayan startup'lar ve yatırım yapmak isteyen kişiler tek bir yerde bulunur. Kullanıcılar ilanları keşfeder, filtreler ve doğrudan mesajlaşır.
 
-**Connection yok. Match yok. Meeting yok. Payment yok.**
+**Kapsamda olan (MVP):**
+
+1. Startup onboarding / profil oluşturma
+2. Investor onboarding / profil oluşturma
+3. Startupların investorları keşfetmesi
+4. Investorların startupları keşfetmesi
+5. Basit filtreleme
+6. Profil/detay görüntüleme
+7. Herkesin herkese doğrudan mesaj gönderebilmesi
+8. Basit mesajlaşma
+9. Kendi profilini düzenleme
+
+**Kapsamda olmayan:** Matching, connection request, like, meeting, calendar, feed, follow, AI, pitch deck, payment, subscription, karmaşık bildirimler, yatırım transaction'ı, karmaşık startup/investor profilleri.
+
+## 0. Onboarding / Rol Seçimi
+
+Uygulamaya ilk giren kullanıcı önce rolünü seçer:
+
+```
+Sen kimsin?
+
+[ Startup'ım ]
+
+[ Investor'ım ]
+```
+
+Seçime göre kullanıcı ilgili profil oluşturma ekranına yönlendirilir:
+
+- **Startup** → Bölüm 5'teki "Startup Oluşturma" formu
+- **Investor** → Bölüm 6'daki "Investor Profili" formu
+
+Rol, kullanıcı hesabına kayıt anında bir kere atanır ve Keşfet ekranının davranışını (Bölüm 7) belirler.
 
 ## 1. Ana Menü
 
@@ -27,10 +58,10 @@ Uygulamanın ana ekranı.
 ```
 Startup'ları Keşfet
 
-[ 🔍 Ara ]
-
 [ Filtrele ]
 ```
+
+Ayrı bir arama motoru MVP kapsamında yok; keşif sadece filtreleme ile yapılır.
 
 Altında startup ilanları. Örneğin:
 
@@ -42,8 +73,6 @@ Altında startup ilanları. Örneğin:
   satış otomasyonu geliştiriyoruz.
 
   AI & SaaS
-
-  Seed
 
   $500K arıyoruz
 
@@ -99,8 +128,6 @@ ACME AI
 
 AI & SaaS
 
-Seed
-
 $500K arıyoruz
 
 ────────────────
@@ -127,6 +154,8 @@ Startup'a şu alanları MVP'de zorunlu tutmazdım (isterse açıklamanın içine
 - Website
 - Traction
 - Revenue
+
+**Boş durum:** Keşfet ekranında filtreye uyan hiç ilan yoksa "Bu kriterlere uygun ilan bulunamadı" mesajı gösterilir.
 
 ## 5. Startup Oluşturma
 
@@ -161,6 +190,8 @@ Sektör
 ```
 
 Bu kadar. Kullanıcı 2 dakika içinde ilanını yayınlayabilmeli.
+
+Yayınladıktan sonra Profil sekmesinde kendi ilanını görüntüler ve `[ Düzenle ]` ile aynı formu (isim, açıklama, tutar, sektör) tekrar açıp güncelleyebilir — Investor tarafındaki (Bölüm 6) düzenleme akışıyla simetrik.
 
 ## 6. Investor Tarafı
 
@@ -236,8 +267,6 @@ Startup'ın karşısına:
 ```
 Yatırımcıları Keşfet
 
-[ 🔍 Ara ]
-
 [ Filtrele ]
 
 ────────────────
@@ -267,6 +296,8 @@ SaaS · Fintech
 
 ...
 ```
+
+Filtre kriterleri, Bölüm 3'teki ile simetriktir: sektör ilgisi ve yatırım miktarı (investor'ın "yatırım miktarım" alanına göre).
 
 Burada da connection/match yok. Direkt: Mesaj Gönder.
 
@@ -323,40 +354,33 @@ incelemek isterim.
 
 Başka hiçbir şey yok.
 
-## 11. Network Effect'i Ürünün Merkezine Koyuyoruz
+**Boş durum:** Hiç mesajı olmayan kullanıcı için Mesajlar sekmesinde "Henüz mesajın yok" mesajı gösterilir.
 
-Bu ürün positioning'ini belirliyor. Bu "Startup bulma uygulaması" değil.
+> Not: Ürünün uzun vadeli positioning'i ("fon arayanlarla yatırım yapmak isteyenlerin ortak network'ü", arz/talep sayaçları vb.) bir vizyon notudur — MVP ekran listesinin bir parçası değildir ve bu dokümanın kapsamı dışındadır.
 
-Bu: **"Türkiye'de fon arayanlarla yatırım yapmak isteyenlerin ortak network'ü."**
-
-Dolayısıyla ürünün ana ekranında mümkün olduğunca çok arz + talep görünmeli.
-
-İleride:
-
-```
-1,240 Startup
-   +
-680 Investors
-   ↓
-Tek network
-```
-
-gibi bir network algısı yaratabiliriz. Ama MVP'de bunu bile göstermek zorunda değiliz.
-
-## 12. MVP'nin Tamamı
+## 11. MVP'nin Tamamı
 
 Gerçekten sadece şuna indiriyoruz:
 
 ```
+              ROL SEÇİMİ
+                  │
+          ┌───────┴───────┐
+          │               │
+       STARTUP         INVESTOR
+     (profil oluştur) (profil oluştur)
+          │               │
+          └───────┬───────┘
+                  │
                  APP
                   │
         ┌─────────┼─────────┐
         │         │         │
      KEŞFET     MESAJLAR   PROFİL
-        │
-    ┌───┴────┐
-    │        │
- STARTUP   INVESTOR
+        │                     │
+    ┌───┴────┐             GÖRÜNTÜLE
+    │        │                │
+ STARTUP   INVESTOR        DÜZENLE
     │        │
     └───┬────┘
         │
@@ -367,6 +391,6 @@ Gerçekten sadece şuna indiriyoruz:
      MESAJLAR
 ```
 
-**Startup tarafı**: Oluştur → Yayınla → Investor keşfet → Mesaj gönder/al
+**Startup tarafı**: Rol seç → Profil oluştur/yayınla → Investor keşfet → Filtrele → Detay → Mesaj gönder/al → Profil sekmesinden düzenle
 
-**Investor tarafı**: Profil oluştur → Startup keşfet → Mesaj gönder/al
+**Investor tarafı**: Rol seç → Profil oluştur → Startup keşfet → Filtrele → Detay → Mesaj gönder/al → Profil sekmesinden düzenle
