@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { View } from 'react-native';
-import { Slot } from 'expo-router';
+import { Stack } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import * as Font from 'expo-font';
 import {
@@ -10,6 +10,33 @@ import {
   Inter_700Bold,
 } from '@expo-google-fonts/inter';
 import { colors } from '../constants/theme';
+import { AuthProvider, useAuth } from '../lib/auth-context';
+
+function RootNavigator() {
+  const { session, role, hasCompletedProfile } = useAuth();
+
+  return (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" />
+      <Stack.Protected guard={!session}>
+        <Stack.Screen name="login" />
+        <Stack.Screen name="verify" />
+      </Stack.Protected>
+      <Stack.Protected guard={!!session && !role}>
+        <Stack.Screen name="role-select" />
+      </Stack.Protected>
+      <Stack.Protected guard={!!session && role === 'startup' && !hasCompletedProfile}>
+        <Stack.Screen name="create-startup-profile" />
+      </Stack.Protected>
+      <Stack.Protected guard={!!session && role === 'investor' && !hasCompletedProfile}>
+        <Stack.Screen name="create-investor-profile" />
+      </Stack.Protected>
+      <Stack.Protected guard={!!session && !!role && hasCompletedProfile}>
+        <Stack.Screen name="(tabs)" />
+      </Stack.Protected>
+    </Stack>
+  );
+}
 
 export default function RootLayout() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
@@ -28,9 +55,11 @@ export default function RootLayout() {
   }
 
   return (
-    <View style={{ flex: 1, backgroundColor: colors.background }}>
-      <StatusBar style="dark" />
-      <Slot />
-    </View>
+    <AuthProvider>
+      <View style={{ flex: 1, backgroundColor: colors.background }}>
+        <StatusBar style="dark" />
+        <RootNavigator />
+      </View>
+    </AuthProvider>
   );
 }

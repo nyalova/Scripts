@@ -1,33 +1,32 @@
-import { StyleSheet, Text, View } from 'react-native';
-import { colors, fontFamily, spacing } from '../constants/theme';
+import { ActivityIndicator, View } from 'react-native';
+import { Redirect } from 'expo-router';
+import { colors } from '../constants/theme';
+import { useAuth } from '../lib/auth-context';
 
 export default function Index() {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Startup-Investor MVP</Text>
-      <Text style={styles.subtitle}>Project setup complete. Screens land in later phases.</Text>
-    </View>
-  );
-}
+  const { session, role, hasCompletedProfile, loading } = useAuth();
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: colors.background,
-    padding: spacing.lg,
-  },
-  title: {
-    fontFamily: fontFamily.semiBold,
-    fontSize: 20,
-    color: colors.dark,
-    marginBottom: spacing.sm,
-  },
-  subtitle: {
-    fontFamily: fontFamily.regular,
-    fontSize: 14,
-    color: colors.secondaryText,
-    textAlign: 'center',
-  },
-});
+  if (loading) {
+    return (
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: colors.background }}>
+        <ActivityIndicator color={colors.primary} />
+      </View>
+    );
+  }
+
+  if (!session) {
+    return <Redirect href="/login" />;
+  }
+
+  if (!role) {
+    return <Redirect href="/role-select" />;
+  }
+
+  if (!hasCompletedProfile) {
+    return (
+      <Redirect href={role === 'startup' ? '/create-startup-profile' : '/create-investor-profile'} />
+    );
+  }
+
+  return <Redirect href="/discover" />;
+}
