@@ -33,6 +33,8 @@ function RootNavigator() {
       </Stack.Protected>
       <Stack.Protected guard={!!session && !!role && hasCompletedProfile}>
         <Stack.Screen name="(tabs)" />
+        <Stack.Screen name="edit-startup-profile" />
+        <Stack.Screen name="edit-investor-profile" />
       </Stack.Protected>
     </Stack>
   );
